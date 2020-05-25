@@ -1,0 +1,94 @@
+<div class=" pt-4 bg-dark">
+  <img src="/img/logo.png" height="75" width="150" class="mx-auto d-block float-left"/>
+  <h1 class="mt-1 text-white">Cart</h1>
+  <hr class="bg-dark" />
+</div>
+  <p class="h4 mb-3 font-weight-bold" style=" font-family: Arial, Helvetica, sans-serif;">
+    Welcome <%= user.name %>!
+  <a href="/users/logout" class="btn btn-secondary float-right">Logout</a>
+  </p>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="/dashboard">Home </a>
+        <a class="nav-item nav-link" href="/pricing">Pricing</a>
+        <a class="nav-item nav-link active" href="/cart">Cart<span class="sr-only">(current)</span></a>
+      </div>
+    </div>
+  </nav>
+  
+  
+  <%- include ("./partials/messages") %>
+
+  <br>
+  <% if(cart.length != 0 && typeof clear == 'undefined') { %>
+    <% locals.total = 0 %>
+    <br />
+      <form action="/cart" method="POST">
+      <table class="table table-hover">
+        <thead>
+          <tr class="text-center">
+            <th scope="col">Item Name</th>
+            <th scope="col">Cost</th>
+            <th scope="col"> </th>
+            <th scope="col">Quantity</th>
+            <th scope="col"></th>
+            <th scope="col"> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cart.forEach( cart => { %>
+          <tr class="text-center">  
+            <% product.forEach(product => { %>
+            <% if(cart.itemid == product.id && user.email == cart.buyerid && remove != product.id) { %>
+
+            <th scope="row">  <%= product.name %>  </th>
+            <td>Rs. <%= product.cost %></td>
+            <td class="text-right"> <button class="btn btn-secondary" type="submit" name="plus" value="<%= product.id %>"> + </button></td>
+
+            <% if(typeof quantity != 'undefined' && typeof plus != 'undefined' && plus == product.id ){ %> 
+            <td> <%= quantity %> </td>
+            <% locals.total = locals.total + (quantity*product.cost) %>
+            <% } else if(typeof quantity != 'undefined' && typeof minus != 'undefined' && minus == product.id ){ %> 
+              <td> <%= quantity %> 
+              </td>
+              <% locals.total = locals.total + (quantity*product.cost) %>
+              <% } else { %>
+            <td> <%= cart.quantity %></td>
+            <% locals.total  = locals.total + (cart.quantity*product.cost) %>
+            <% } %>
+            <td class="text-left"><button class="btn btn-secondary" type="submit" name="minus" value="<%= product.id %>">  - </button></td>
+            <td><button class="btn btn-primary" type="submit" name="remove" value="<%= product.id %>">X</button></td>
+          </tr>
+          <% } %>
+          <% }) %>
+          <% }) %>
+        </tbody>
+      </table>
+
+
+
+<footer>
+    <h5 class="text-center"> Grand Total: Rs. <%= locals.total %>  </h5>
+    <p class="text-center">
+  <button class="btn btn-primary text-center" type="submit" name="checkout" value="checkout" style="padding-left: 100px; padding-right: 100px;"> Check Out </button>
+  </p>
+</footer>
+</form>
+
+    <% } else { %>
+      <br /><br/><br/><br /><br/><br/><br/><br />
+      <h4 class="lead text-center">Cart is empty! Head to Pricing to add something into the cart!</h4>
+      <br/><br /><br/><br/><br /><br/><br/><br><br><br />
+    <% } %>
+
+  <footer class="page-footer font-small blue">
+
+    <div class="footer-copyright text-center py-3 bg-light">© 2020 Copyright:
+      Reece D'Souza
+    </div>
+  </footer>
+  

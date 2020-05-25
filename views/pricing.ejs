@@ -1,0 +1,86 @@
+<div class=" pt-4 bg-dark">
+  <img src="/img/logo.png" height="75" width="150" class="mx-auto d-block float-left" />
+  <h1 class="mt-1 text-white">Pricing</h1>
+  <hr class="bg-dark" />
+</div>
+<p class="h4 mb-3 font-weight-bold" style=" font-family: Arial, Helvetica, sans-serif;">
+  Welcome <%= user.name %>!
+  <a href="/users/logout" class="btn btn-secondary float-right">Logout</a>
+</p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" href="/dashboard">Home </a>
+      <a class="nav-item nav-link active" href="/pricing">Pricing <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="/cart">Cart</a>
+    </div>
+  </div>
+</nav>
+
+<%- include ("./partials/messages") %>
+
+<p>
+
+  <% type.forEach( type => { %>
+<h2><%= type.name%></h2>
+<hr />
+<div class="card-columns">
+  <form action="/pricing" method="POST">
+    <% product.forEach(function(product) { %>
+    <% if(product.model == type.name) { %>
+    <div class="card" style="width: 18rem; height: 22rem;">
+      <img src="/img/produce/<%=product.image%>" class="card-img-top" style="width: 17.9rem; height: 12rem;" alt="...">
+      <div class="card-body text-center">
+        <h5 class="card-title"><%=product.name%></h5>
+        <p class="card-text">Rs. <%=product.cost%>/- <%=type.quantity %></p>
+
+
+
+        <% locals.flag = 0 %>
+        <% locals.flag1 = 0 %>
+        <% cart.forEach(cart => { %>
+        <% if(product.id == cart.itemid) {%>
+        <button type="button" class="btn btn-secondary" disabled>Added to cart</button>
+        <%  locals.flag = 1 %>
+        <%} %>
+
+        <%}); %>
+        <% if(locals.flag == 0 && typeof addItem == 'undefined') { %>
+        <button type="submit" name="button" value="<%=product.name%>" class="btn btn-primary">Add to cart</button>
+        <% locals.flag1 = 1 %>
+        <% } %>
+
+        <% if(locals.flag == 0 && locals.flag1 == 0 && typeof addItem != 'undefined' && product.id==addItem.itemid) { %>
+        <button type="button" class="btn btn-secondary" disabled>Added to cart</button>
+        <% } %>
+
+        <% if(locals.flag == 0 && typeof addItem != 'undefined' && product.id!=addItem.itemid) { %>
+        <button type="submit" name="button" value="<%=product.name%>" class="btn btn-primary">Add to cart</button>
+        <% locals.flag1 = 1 %>
+        <% } %>
+
+
+
+
+      </div>
+    </div>
+    <% } %>
+    <!-- /.card -->
+    <% }) %>
+
+  </form>
+
+</div>
+<!-- /.card-deck -->
+<% }) %>
+
+</p>
+
+<footer class="page-footer font-small blue">
+  <div class="footer-copyright text-center py-3 bg-light">© 2020 Copyright: Reece D'Souza
+  </div>
+</footer>
